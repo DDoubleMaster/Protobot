@@ -6,6 +6,7 @@ public class Block : MonoBehaviour
     GameManager gMan;
 
     [SerializeField] List<Transform> points;
+    GameObject[] platforms;
 
     Vector2 blockPos;
 
@@ -13,10 +14,11 @@ public class Block : MonoBehaviour
     void Start()
     {
         gMan = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        gMan.currentBlockWasSet += CheckPos;
 
         blockPos = new Vector2(transform.position.x, transform.position.z);
 
-        gMan.currentBlockWasSet += CheckPos;
+        platforms = Resources.LoadAll<GameObject>("Platforms/");
     }
 
     void CheckPos(Vector2 currentPos)
@@ -30,8 +32,9 @@ public class Block : MonoBehaviour
 
     void GenerateBlocks()
     {
-/*        foreach(Transform point in points)
-            Instantiate(testBlock, point.position, point.rotation);*/
+        int platformIndex = Random.Range(0, platforms.Length);
+        foreach (Transform point in points)
+            Instantiate(platforms[platformIndex], point.position, point.rotation);
     }
 
     private void OnDestroy()
