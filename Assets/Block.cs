@@ -32,9 +32,11 @@ public class Block : MonoBehaviour
 
     void GenerateBlocks()
     {
-        int platformIndex = Random.Range(0, platforms.Length);
         foreach (Transform point in points)
+        {
+            int platformIndex = Random.Range(0, platforms.Length);
             Instantiate(platforms[platformIndex], point.position, point.rotation);
+        }
     }
 
     private void OnDestroy()
