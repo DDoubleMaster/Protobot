@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Block : MonoBehaviour
+public class Platformer : MonoBehaviour
 {
     GameManager gMan;
 
@@ -9,6 +9,7 @@ public class Block : MonoBehaviour
     GameObject[] platforms;
 
     Vector2 blockPos;
+    bool isCurrentPlatform = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -23,11 +24,23 @@ public class Block : MonoBehaviour
 
     void CheckPos(Vector2 currentPos)
     {
-        if (currentPos == blockPos)
+        Debug.Log($"{gameObject.name}, {currentPos} and {Mathf.Abs((currentPos - blockPos).magnitude)}");
+
+        if (currentPos == blockPos && isCurrentPlatform != true)
+        {
+            isCurrentPlatform = true;
             GenerateBlocks();
+        }
+
+        if (Mathf.Abs((currentPos - blockPos).magnitude) == 20)
+            isCurrentPlatform = false;
+            
 
         if (Mathf.Abs((currentPos - blockPos).magnitude) != 20 && currentPos != blockPos)
-            Destroy(gameObject); 
+        {
+            isCurrentPlatform = false;
+            Destroy(gameObject);
+        }
     }
 
     void GenerateBlocks()
@@ -35,7 +48,9 @@ public class Block : MonoBehaviour
         foreach (Transform point in points)
         {
             int platformIndex = Random.Range(0, platforms.Length);
-            Instantiate(platforms[platformIndex], point.position, point.rotation);
+            GameObject currentPlatform = Instantiate(platforms[platformIndex], point.position, point.rotation);
+            Vector3 pos = currentPlatform.transform.position;
+            currentPlatform.name = $"Platform {pos.x} | {pos.z}";
         }
     }
 
