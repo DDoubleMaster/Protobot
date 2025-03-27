@@ -22,9 +22,7 @@ public class PlatformerZone : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Transform parentPlatform = transform.parent;
-            Vector2 blockPos = new Vector2(parentPlatform.position.x, parentPlatform.position.z);
-            gMan.SetCurrentBlock(blockPos);
+            gMan.SetCurrentPlatform(GetComponentInParent<Platformer>());
             nextColor = Color.clear;
         }
     }

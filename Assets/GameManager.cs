@@ -1,20 +1,30 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
-    Vector2 currentBlock;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    Platformer levelTwo;
+    List<Platformer> levelOne = new List<Platformer>();
+    
+    public void SetCurrentPlatform(Platformer nextPlatform)
     {
-        SetCurrentBlock(Vector2.zero);
-    }
+        if (levelTwo != null && levelTwo == nextPlatform)
+            return;
 
-    public delegate void BlockSet(Vector2 blockPose); 
-    public event BlockSet currentBlockWasSet;
-    public void SetCurrentBlock(Vector2 blockPose)
-    {
-        currentBlock = blockPose;
-        currentBlockWasSet?.Invoke(currentBlock);
+        if (levelOne.Count != 0)
+            foreach (Platformer platform in levelOne)
+            {
+                if (platform != nextPlatform)
+                    Destroy(platform.gameObject);
+            }
+
+        levelOne.Clear();
+
+        if (levelTwo != null)
+            levelOne.Add(levelTwo);
+
+        levelTwo = nextPlatform;
+        levelOne.AddRange(levelTwo.GenerateBlocks());
+        
     }
 }
